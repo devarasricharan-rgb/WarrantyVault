@@ -10,7 +10,7 @@ services:
       - key: PORT
         value: 8080
       - key: DB_URL
-        sync: false # Set to your external MySQL JDBC connection string (e.g. Aiven, Railway, AWS RDS)
+        sync: false   # Set to your external MySQL JDBC connection string
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -18,6 +18,8 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        sync: false # Set to your deployed Vercel frontend URL (e.g. https://warrantyvault.vercel.app)
+        value: https://warranty-vault-pi.vercel.app
       - key: UPLOAD_DIR
         value: uploads
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
