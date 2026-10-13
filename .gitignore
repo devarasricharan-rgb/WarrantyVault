@@ -1,0 +1,44 @@
+# ==========================================
+# WarrantyVault Git Ignore Rules
+# ==========================================
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Files
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment & Local Secrets
+.env
+.env.local
+.env.*.local
+*.log
+
+# Backend Build Artifacts (Maven / Java)
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+
+# Frontend Build Artifacts (Node / React / Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/package-lock.json
+
+# File Upload Storage (preserve folder with .gitkeep)
+uploads/*
+!uploads/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Testing temporary files
+backend/target/test-uploads/
