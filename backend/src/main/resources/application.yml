@@ -5,23 +5,24 @@ spring:
   application:
     name: warrantyvault-backend
 
+  datasource:
+    url: jdbc:h2:mem:warrantyvault;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: false
     properties:
       hibernate:
-        format_sql: false
         dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
 
   h2:
     console:
       enabled: false
-
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
   servlet:
     multipart:

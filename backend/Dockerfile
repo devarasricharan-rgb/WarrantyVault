@@ -16,23 +16,22 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Create directories for uploads and H2 database file
-RUN mkdir -p /app/uploads /app/data
+RUN mkdir -p /app/uploads
 
-# Copy built artifact from build stage
 COPY --from=build /app/target/warrantyvault-backend-*.jar app.jar
 
 EXPOSE 8080
 
 ENV PORT=8080
 
-# Java -D system properties have HIGHEST priority and override ALL environment variables on Render
+# Force H2 in-memory DB via highest-priority JVM system properties
+# These override any SPRING_DATASOURCE_URL env var set on Render
 ENTRYPOINT ["java", \
   "-Djava.security.egd=file:/dev/./urandom", \
-  "-Dspring.datasource.url=jdbc:h2:file:/app/data/warrantyvault;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE", \
+  "-Dspring.datasource.url=jdbc:h2:mem:warrantyvault;DB_CLOSE_DELAY=-1;MODE=MySQL", \
   "-Dspring.datasource.username=sa", \
   "-Dspring.datasource.password=", \
   "-Dspring.datasource.driver-class-name=org.h2.Driver", \
   "-Dspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect", \
-  "-Dspring.jpa.hibernate.ddl-auto=update", \
+  "-Dspring.jpa.hibernate.ddl-auto=create-drop", \
   "-jar", "app.jar"]
