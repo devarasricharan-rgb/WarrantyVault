@@ -16,7 +16,7 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Create directories for uploads and H2 database
+# Create directories for uploads and H2 database file
 RUN mkdir -p /app/uploads /app/data
 
 # Copy built artifact from build stage
@@ -25,6 +25,5 @@ COPY --from=build /app/target/warrantyvault-backend-*.jar app.jar
 EXPOSE 8080
 
 ENV PORT=8080
-ENV SPRING_PROFILES_ACTIVE=prod
 
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
