@@ -2,15 +2,15 @@
 
 This directory contains the database initialization schema for MySQL 8.0+.
 
-## Option 1: Automatic Schema Initialization via Hibernate
-By default in `backend/src/main/resources/application.yml`, Spring Boot has:
+## Automatic Schema Initialization via Hibernate
+With MySQL environment variables configured, Spring Boot has:
 ```yaml
 spring:
   jpa:
     hibernate:
       ddl-auto: update
 ```
-If you start the backend pointing to a running MySQL instance, Hibernate will automatically create or update all tables (`users`, `products`, `repairs`, `notifications`) and constraints on startup.
+Hibernate will automatically create or update all tables (`users`, `products`, `repairs`, `notifications`) and constraints on startup.
 
 ## Option 2: Manual Script Execution
 You can manually run `schema.sql` against your MySQL server:

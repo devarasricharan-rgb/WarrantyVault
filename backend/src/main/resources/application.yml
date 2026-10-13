@@ -5,21 +5,23 @@ spring:
   application:
     name: warrantyvault-backend
 
+  # Production MySQL datasource – required environment variables
   datasource:
-    url: jdbc:h2:mem:warrantyvault;DB_CLOSE_DELAY=-1;MODE=MySQL
-    username: sa
-    password: ""
-    driver-class-name: org.h2.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/warrantyvault?createDatabaseIfNotExists=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
 
+  # H2 console is disabled – no H2 in production
   h2:
     console:
       enabled: false
@@ -43,10 +45,11 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:WarrantyVaultProdSecretKey2024XyZ987AbcDef1234567890123456789012}
+    # No default – startup will fail if JWT_SECRET is missing
+    secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   cors:
-    allowed-origins: ${FRONTEND_URL:https://warranty-vault-pi.vercel.app,http://localhost:5173,http://localhost:3000}
+    allowed-origins: ${FRONTEND_URL:http://localhost:5173}
   upload:
     dir: ${UPLOAD_DIR:/app/uploads}
 
@@ -57,7 +60,8 @@ management:
         include: health,info,metrics
   endpoint:
     health:
-      show-details: always
+      # Do not expose detailed DB info in production
+      show-details: never
 
 springdoc:
   api-docs:

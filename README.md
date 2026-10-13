@@ -100,7 +100,7 @@ npm.cmd run build
 The database schema and initialization script is located in [`database/schema.sql`](database/schema.sql).
 
 ### Automatic Creation:
-By default, Spring Boot Hibernate (`ddl-auto: update`) automatically provisions and updates all tables and relationships on startup.
+With `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` configured, Spring Boot Hibernate (`ddl-auto: update`) automatically provisions and updates all tables and relationships on startup.
 
 ### Manual Creation:
 ```powershell
@@ -121,6 +121,8 @@ mysql -u root -p < ".\database\schema.sql"
    - `DB_PASSWORD`: Database password
    - `JWT_SECRET`: Random 256-bit string
    - `FRONTEND_URL`: Your Vercel frontend URL (e.g. `https://your-app.vercel.app`)
+
+   The included `render.yaml` mounts a persistent disk at `/app/uploads` so receipt files survive service restarts.
 
 ### 2. Frontend on Vercel
 1. In Vercel, import your repository.

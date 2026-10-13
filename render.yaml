@@ -20,6 +20,8 @@ services:
       - key: FRONTEND_URL
         value: https://warranty-vault-pi.vercel.app
       - key: UPLOAD_DIR
-        value: uploads
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
+        value: /app/uploads
+    disk:
+      name: warrantyvault-uploads
+      mountPath: /app/uploads
+      sizeGB: 1

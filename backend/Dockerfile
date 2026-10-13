@@ -24,14 +24,7 @@ EXPOSE 8080
 
 ENV PORT=8080
 
-# Force H2 in-memory DB via highest-priority JVM system properties
-# These override any SPRING_DATASOURCE_URL env var set on Render
-ENTRYPOINT ["java", \
-  "-Djava.security.egd=file:/dev/./urandom", \
-  "-Dspring.datasource.url=jdbc:h2:mem:warrantyvault;DB_CLOSE_DELAY=-1;MODE=MySQL", \
-  "-Dspring.datasource.username=sa", \
-  "-Dspring.datasource.password=", \
-  "-Dspring.datasource.driver-class-name=org.h2.Driver", \
-  "-Dspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect", \
-  "-Dspring.jpa.hibernate.ddl-auto=create-drop", \
+# Use environment variables for datasource configuration (MySQL)
+ENTRYPOINT ["java",
+  "-Djava.security.egd=file:/dev/./urandom",
   "-jar", "app.jar"]
