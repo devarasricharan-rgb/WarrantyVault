@@ -16,8 +16,8 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Create upload storage directory
-RUN mkdir -p /app/uploads
+# Create directories for uploads and H2 database
+RUN mkdir -p /app/uploads /app/data
 
 # Copy built artifact from build stage
 COPY --from=build /app/target/warrantyvault-backend-*.jar app.jar
