@@ -3,6 +3,7 @@ package com.warrantyvault.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -31,7 +32,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:3000}")
+    @Value("${app.cors.allowed-origins:https://warranty-vault-pi.vercel.app,http://localhost:5173,http://localhost:3000}")
     private String allowedOrigins;
 
     public SecurityConfig(CustomUserDetailsService userDetailsService,
@@ -65,6 +66,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         List<String> origins = Arrays.stream(allowedOrigins.split(","))
                 .map(String::trim)
+                .map(s -> s.replaceAll("/+$", ""))
                 .filter(s -> !s.isEmpty())
                 .toList();
         configuration.setAllowedOrigins(origins);
@@ -87,6 +89,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/login",

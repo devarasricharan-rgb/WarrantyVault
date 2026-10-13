@@ -18,6 +18,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { API_BASE_URL } from '../../api/client';
 
 export const ProfilePage = () => {
   const { user, logout } = useAuth();
@@ -156,7 +157,7 @@ export const ProfilePage = () => {
                     API Base URL
                   </Typography>
                   <Typography variant="body2" fontWeight={600}>
-                    {import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'}
+                    {API_BASE_URL}
                   </Typography>
                 </Box>
               </Box>

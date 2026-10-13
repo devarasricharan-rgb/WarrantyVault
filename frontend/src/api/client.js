@@ -1,6 +1,24 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+// Helper to normalize backend API URL regardless of trailing slashes or /api/v1 suffix
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
+
+  // In production builds, default to deployed Render backend rather than localhost.
+  // In development mode, default to local Spring Boot (http://localhost:8080/api/v1).
+  const defaultUrl = import.meta.env.PROD
+    ? 'https://warrantyvault-1.onrender.com/api/v1'
+    : 'http://localhost:8080/api/v1';
+
+  const rawUrl = (envUrl && envUrl.trim()) ? envUrl.trim() : defaultUrl;
+  let cleaned = rawUrl.replace(/\/+$/, '');
+  if (!cleaned.endsWith('/api/v1')) {
+    cleaned = `${cleaned}/api/v1`;
+  }
+  return cleaned;
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -58,7 +76,21 @@ export const productApi = {
     return apiClient.put(`/products/${id}`, formData, { headers });
   },
   delete: (id) => apiClient.delete(`/products/${id}`),
-  getReceiptUrl: (id) => `${API_BASE_URL}/products/${id}/receipt`,
+  getReceiptUrl: (id) => {
+    const token = localStorage.getItem('token');
+    return `${API_BASE_URL}/products/${id}/receipt${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+  },
+  downloadReceipt: async (id, fileName) => {
+    const response = await apiClient.get(`/products/${id}/receipt`, { responseType: 'blob' });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName || 'receipt');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  },
 };
 
 export const warrantyApi = {
