@@ -26,4 +26,13 @@ EXPOSE 8080
 
 ENV PORT=8080
 
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+# Java -D system properties have HIGHEST priority and override ALL environment variables on Render
+ENTRYPOINT ["java", \
+  "-Djava.security.egd=file:/dev/./urandom", \
+  "-Dspring.datasource.url=jdbc:h2:file:/app/data/warrantyvault;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE", \
+  "-Dspring.datasource.username=sa", \
+  "-Dspring.datasource.password=", \
+  "-Dspring.datasource.driver-class-name=org.h2.Driver", \
+  "-Dspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect", \
+  "-Dspring.jpa.hibernate.ddl-auto=update", \
+  "-jar", "app.jar"]
